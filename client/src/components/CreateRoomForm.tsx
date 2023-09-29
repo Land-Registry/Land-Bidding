@@ -67,6 +67,15 @@ export const CreateRoomForm = () => {
         onChange={handleChange('name')}
       />
 
+<TextField
+        label="PID"
+        variant="outlined"
+        color="secondary"
+        autoFocus
+        type='number'
+        helperText={nameFieldEmpty && 'PID is required'}
+      />
+
       <TextField
         label="Description"
         variant="outlined"

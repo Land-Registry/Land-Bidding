@@ -179,11 +179,11 @@ export default function RoomSelectionDialog() {
             </CustomRoomWrapper>
           ) : (
             <>
-              <Title>Welcome to SkyOffice</Title>
+              <Title>Welcome to Land-Bidding</Title>
               <Content>
-                <img src={logo} alt="logo" />
+                <p className='px-20 text-red-500 text-center'><b>NOTE:</b> To provide you with a better experience, Land Bidding would like to access your microphone and Camera.</p>
                 <Button variant="contained" color="secondary" onClick={handleConnect}>
-                  Connect to public lobby
+                  
                 </Button>
                 <Button
                   variant="outlined"

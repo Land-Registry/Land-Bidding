@@ -17,6 +17,11 @@ const Backdrop = styled.div`
   height: 100%;
   width: 100%;
 `
+const currentURL = window.location.href;
+const parts = currentURL.split('/');
+const lastPart = parts[parts.length - 1];
+
+console.log(lastPart); // Outputs: "22"
 
 function App() {
   const loggedIn = useAppSelector((state) => state.user.loggedIn)
@@ -52,12 +57,18 @@ function App() {
     ui = <RoomSelectionDialog />
   }
 
-  return (
+  return (<>
+  <div className='h-14 items-center flex justify-between'>
+    <div className='p-6 font-bold'>LAND-BIDDING</div>
+    <div> {lastPart}</div>
+    <div></div>
+  </div>
     <Backdrop>
       {ui}
       {/* Render HelperButtonGroup if no dialogs are opened. */}
       {!computerDialogOpen && !whiteboardDialogOpen && <HelperButtonGroup />}
     </Backdrop>
+  </>
   )
 }
 
