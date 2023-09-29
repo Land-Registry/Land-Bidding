@@ -30,7 +30,6 @@ const Wrapper = styled.form`
   transform: translate(-50%, -50%);
   background: #222639;
   border-radius: 16px;
-  padding: 36px 60px;
   box-shadow: 0px 0px 5px #0000006f;
 `
 
@@ -148,6 +147,7 @@ export default function LoginDialog() {
   const videoConnected = useAppSelector((state) => state.user.videoConnected)
   const roomJoined = useAppSelector((state) => state.room.roomJoined)
   const roomName = useAppSelector((state) => state.room.roomName)
+  const roomID = useAppSelector((state) => state.room.roomId)
   const roomDescription = useAppSelector((state) => state.room.roomDescription)
   const game = phaserGame.scene.keys.game as Game
 
@@ -166,17 +166,22 @@ export default function LoginDialog() {
   }
 
   return (
-    <Wrapper onSubmit={handleSubmit}>
+    <Wrapper onSubmit={handleSubmit} >
+      <div className='px-[60px] py-[36px] rounded-lg bg-gray-500'>
+
       <Title>Joining</Title>
       <RoomName>
         <Avatar style={{ background: getColorByString(roomName) }}>
           {getAvatarString(roomName)}
         </Avatar>
-        <h3>{roomName}</h3>
+        <h3>{roomName} ({roomID})</h3>
       </RoomName>
-      <RoomDescription>
+      </div>
+      {/* <RoomDescription className='mt-'>
         <ArrowRightIcon /> {roomDescription}
-      </RoomDescription>
+      </RoomDescription> */}
+      <div  className='px-[60px] py-[36px] rounded-lg'>
+
       <Content>
         <Left>
           <SubTitle>Select an avatar</SubTitle>
@@ -239,6 +244,7 @@ export default function LoginDialog() {
           Join
         </Button>
       </Bottom>
+      </div>
     </Wrapper>
   )
 }
