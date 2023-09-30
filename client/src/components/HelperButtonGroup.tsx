@@ -119,13 +119,6 @@ export default function HelperButtonGroup() {
   return (
     <Backdrop>
       <div className="wrapper-group">
-        {roomJoined && (
-          <Tooltip title={showJoystick ? 'Disable virtual joystick' : 'Enable virtual joystick'}>
-            <StyledFab size="small" onClick={() => dispatch(setShowJoystick(!showJoystick))}>
-              {showJoystick ? <VideogameAssetOffIcon /> : <VideogameAssetIcon />}
-            </StyledFab>
-          </Tooltip>
-        )}
         {showRoomInfo && (
           <Wrapper>
             <IconButton className="close" onClick={() => setShowRoomInfo(false)} size="small">
@@ -206,20 +199,6 @@ export default function HelperButtonGroup() {
             </Tooltip>
           </>
         )}
-        <Tooltip title="Visit Our GitHub">
-          <StyledFab
-            size="small"
-            href="https://github.com/kevinshen56714/SkyOffice"
-            target="_blank"
-          >
-            <GitHubIcon />
-          </StyledFab>
-        </Tooltip>
-        <Tooltip title="Follow Us on Twitter">
-          <StyledFab size="small" href="https://twitter.com/SkyOfficeApp" target="_blank">
-            <TwitterIcon />
-          </StyledFab>
-        </Tooltip>
         <Tooltip title="Switch Background Theme">
           <StyledFab size="small" onClick={() => dispatch(toggleBackgroundMode())}>
             {backgroundMode === BackgroundMode.DAY ? <DarkModeIcon /> : <LightModeIcon />}

@@ -20,18 +20,17 @@ import { MessageType, setFocused, setShowChat } from '../stores/ChatStore'
 
 const Backdrop = styled.div`
   position: fixed;
-  bottom: 60px;
+  bottom: 0px;
   left: 0;
-  height: 400px;
-  width: 500px;
-  max-height: 50%;
+  height: 1600px;
+  width: 400px;
+  max-height: 70%;
   max-width: 100%;
 `
 
 const Wrapper = styled.div`
   position: relative;
   height: 100%;
-  padding: 16px;
   display: flex;
   flex-direction: column;
 `
@@ -43,14 +42,14 @@ const FabWrapper = styled.div`
 const ChatHeader = styled.div`
   position: relative;
   height: 35px;
-  background: #000000a7;
-  border-radius: 10px 10px 0px 0px;
+  background: #ffffff;
 
   h3 {
-    color: #fff;
+    color: #000;
     margin: 7px;
     font-size: 17px;
     text-align: center;
+    border-bottom:1px solid black;
   }
 
   .close {
@@ -64,7 +63,7 @@ const ChatBox = styled(Box)`
   height: 100%;
   width: 100%;
   overflow: auto;
-  background: #2c2c2c;
+  background: #ffffff;
   border: 1px solid #00000029;
 `
 
@@ -83,31 +82,27 @@ const MessageWrapper = styled.div`
   }
 
   span {
-    color: white;
+    color: black;
     font-weight: normal;
   }
+
 
   .notification {
     color: grey;
     font-weight: normal;
-  }
+  } 
 
-  :hover {
-    background: #3a3a3a;
-  }
 `
 
 const InputWrapper = styled.form`
   box-shadow: 10px 10px 10px #00000018;
   border: 1px solid #42eacb;
-  border-radius: 0px 0px 10px 10px;
   display: flex;
   flex-direction: row;
   background: linear-gradient(180deg, #000000c1, #242424c0);
 `
 
 const InputTextField = styled(InputBase)`
-  border-radius: 0px 0px 10px 10px;
   input {
     padding: 5px;
   }
@@ -162,6 +157,7 @@ const Message = ({ chatMessage, messageType }) => {
 
 export default function Chat() {
   const [inputValue, setInputValue] = useState('')
+  const [HighestBID, setHighestBID] = useState('')
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const [readyToSubmit, setReadyToSubmit] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -199,11 +195,15 @@ export default function Chat() {
     inputRef.current?.blur()
 
     const val = inputValue.trim()
-    setInputValue('')
-    if (val) {
-      game.network.addChatMessage(val)
-      game.myPlayer.updateDialogBubble(val)
+    if (inputValue> HighestBID){
+      setHighestBID(inputValue)
+      setInputValue('')
+      if (val) {
+        game.network.addChatMessage(val)
+        game.myPlayer.updateDialogBubble(val)
+      }
     }
+    
   }
 
   const scrollToBottom = () => {
@@ -226,7 +226,7 @@ export default function Chat() {
         {showChat ? (
           <>
             <ChatHeader>
-              <h3>Chat</h3>
+              <h3 className='text-black'>Virtual Dashboard</h3>
               <IconButton
                 aria-label="close dialog"
                 className="close"
@@ -236,15 +236,20 @@ export default function Chat() {
                 <CloseIcon />
               </IconButton>
             </ChatHeader>
+            <div className='text-center p-2 bg-white'>
+              <h3>Highest Bidding Price</h3>
+              <h1 className='text-4xl mt-2'> {HighestBID}</h1>      
+            </div>
             <ChatBox>
               {chatMessages.map(({ messageType, chatMessage }, index) => (
                 <Message chatMessage={chatMessage} messageType={messageType} key={index} />
               ))}
+
               <div ref={messagesEndRef} />
               {showEmojiPicker && (
                 <EmojiPickerWrapper>
                   <Picker
-                    theme="dark"
+                    theme="light"
                     showSkinTones={false}
                     showPreview={false}
                     onSelect={(emoji) => {
@@ -262,7 +267,8 @@ export default function Chat() {
                 inputRef={inputRef}
                 autoFocus={focused}
                 fullWidth
-                placeholder="Press Enter to chat"
+                placeholder="Press Enter to Bid Amount"
+                type='number'
                 value={inputValue}
                 onKeyDown={handleKeyDown}
                 onChange={handleChange}
