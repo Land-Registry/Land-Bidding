@@ -21,6 +21,16 @@ const CreateRoomFormWrapper = styled.form`
 `
 
 export const CreateRoomForm = () => {
+
+  const currentURL = window.location.href;
+  var parts = currentURL.split('/');
+  parts = parts[3].split('#');
+  console.log(parts);
+  const UserID = parts[parts.length - 4];
+  const landID = parts[parts.length - 3];
+  const methods = parts[parts.length - 2];
+  const roomID = parts[parts.length - 1];
+  
   const [values, setValues] = useState<IRoomData>({
     name: '',
     description: '',
@@ -31,6 +41,7 @@ export const CreateRoomForm = () => {
   const [nameFieldEmpty, setNameFieldEmpty] = useState(false)
   const [descriptionFieldEmpty, setDescriptionFieldEmpty] = useState(false)
   const lobbyJoined = useAppSelector((state) => state.room.lobbyJoined)
+
 
   const handleChange = (prop: keyof IRoomData) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
@@ -53,17 +64,19 @@ export const CreateRoomForm = () => {
         .then(() => bootstrap.launchGame())
         .catch((error) => console.error(error))
     }
+    
   }
 
   return (
     <CreateRoomFormWrapper onSubmit={handleSubmit}>
       <TextField
-        label="Name"
+        label="UserID"
         variant="outlined"
         color="secondary"
         autoFocus
+        value={UserID}
         error={nameFieldEmpty}
-        helperText={nameFieldEmpty && 'Name is required'}
+        helperText={nameFieldEmpty && 'UserID is required'}
         onChange={handleChange('name')}
       />
 
@@ -71,7 +84,7 @@ export const CreateRoomForm = () => {
         label="PID"
         variant="outlined"
         color="secondary"
-        autoFocus
+        value={landID}
         type='number'
         helperText={nameFieldEmpty && 'PID is required'}
       />

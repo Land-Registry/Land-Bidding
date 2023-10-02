@@ -18,10 +18,14 @@ const Backdrop = styled.div`
   width: 100%;
 `
 const currentURL = window.location.href;
-const parts = currentURL.split('/');
-const lastPart = parts[parts.length - 1];
+var parts = currentURL.split('/');
+parts = parts[3].split('#');
+console.log(parts);
+const UserID = parts[parts.length - 4];
+const landID = parts[parts.length - 3];
+const methods = parts[parts.length - 2];
+const roomID = parts[parts.length - 1];
 
-console.log(lastPart); // Outputs: "22"
 
 function App() {
   const loggedIn = useAppSelector((state) => state.user.loggedIn)
@@ -57,18 +61,31 @@ function App() {
     ui = <RoomSelectionDialog />
   }
 
-  return (<>
-  <div className='h-14 items-center flex justify-between'>
-    <div className='p-6 font-bold'>LAND-BIDDING</div>
-    <div> {lastPart}</div>
-    <div></div>
-  </div>
+  return (<div>
+    <div className='h-14 bg-white items-center flex justify-between px-5 fixed w-full'>
+      <div className="container flex flex-wrap items-center justify-between mx-auto">
+        <a href="/dashboard" className="flex items-center">
+          <div className="flex flex-row items-center ">
+            {/* <Image src="/images/logo.png" alt="Vivid logo" height="40" width="40" /> */}
+            <div className="text-3xl font-bold">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e9499a] to-[#578cf2]">
+                LAND REGISTRY
+              </span>
+            </div>  
+          </div>
+        </a>
+        <button type="button" className="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm py-2 px-5 text-center mr-20 md:mr-0 ">USER_{UserID}</button>
+    <div><span className="text-white text-3xl font-bold">
+                LAND REGISTRY
+              </span></div>
+     </div>
+    </div>
     <Backdrop>
       {ui}
       {/* Render HelperButtonGroup if no dialogs are opened. */}
       {!computerDialogOpen && !whiteboardDialogOpen && <HelperButtonGroup />}
     </Backdrop>
-  </>
+  </div>
   )
 }
 
