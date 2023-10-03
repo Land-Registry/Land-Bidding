@@ -106,6 +106,21 @@ export const CustomRoomTable = () => {
       })
   }
 
+  
+  const currentURL = window.location.href;
+  var parts = currentURL.split('/');
+  parts = parts[3].split('#');
+  console.log(parts);
+  const UserID = parts[parts.length - 4];
+  const landID = parts[parts.length - 3];
+  const methods = parts[parts.length - 2];
+  const roomID = parts[parts.length - 1];
+  if (roomID!='room'){
+    setTimeout(() => {
+      handleJoinClick(roomID, null)
+    }, 20);
+  }
+
   const handlePasswordSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const isValidPassword = password !== ''

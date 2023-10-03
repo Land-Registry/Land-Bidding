@@ -121,7 +121,6 @@ const dateFormatter = new Intl.DateTimeFormat('en', {
 
 const Message = ({ chatMessage, messageType }) => {
   const [tooltipOpen, setTooltipOpen] = useState(false)
-
   return (
     <MessageWrapper
       onMouseEnter={() => {
@@ -168,6 +167,23 @@ export default function Chat() {
   const dispatch = useAppDispatch()
   const game = phaserGame.scene.keys.game as Game
 
+  
+  const currentURL = window.location.href;
+  var parts = currentURL.split('/');
+  parts = parts[3].split('#');
+  console.log(parts);
+  const UserID = parts[parts.length - 4];
+  const landID = parts[parts.length - 3];
+  const methods = parts[parts.length - 2];
+  const roomID = parts[parts.length - 1];
+  var texttype: string | undefined;
+  if(roomID =='room'){
+    texttype = 'text';
+  }
+  else{
+    texttype = 'number';
+  }
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value)
   }
@@ -195,13 +211,16 @@ export default function Chat() {
     inputRef.current?.blur()
 
     const val = inputValue.trim()
+    
     if (inputValue> HighestBID){
-      setHighestBID(inputValue)
-      setInputValue('')
+        if (roomID !='room'){
+        setHighestBID(inputValue)
+      }
       if (val) {
         game.network.addChatMessage(val)
         game.myPlayer.updateDialogBubble(val)
       }
+      setInputValue('')
     }
     
   }
@@ -268,7 +287,7 @@ export default function Chat() {
                 autoFocus={focused}
                 fullWidth
                 placeholder="Press Enter to Bid Amount"
-                type='number'
+                type={texttype}
                 value={inputValue}
                 onKeyDown={handleKeyDown}
                 onChange={handleChange}

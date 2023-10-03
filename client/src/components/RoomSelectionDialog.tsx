@@ -107,6 +107,27 @@ export default function RoomSelectionDialog() {
   const [showSnackbar, setShowSnackbar] = useState(false)
   const lobbyJoined = useAppSelector((state) => state.room.lobbyJoined)
 
+  const currentURL = window.location.href;
+  var parts = currentURL.split('/');
+  parts = parts[3].split('#');
+  console.log(parts);
+  const UserID = parts[parts.length - 4];
+  const landID = parts[parts.length - 3];
+  const methods = parts[parts.length - 2];
+  const roomID = parts[parts.length - 1];
+
+  if(roomID=='room'){
+    setTimeout(() => {
+      setShowCreateRoomForm(true)
+    }, 30);
+  }
+
+if(methods=="livechats"){
+  setTimeout(() => {
+    lobbyJoined ? setShowCustomRoom(true) : setShowSnackbar(true)
+  }, 10);
+}
+
   const handleConnect = () => {
     if (lobbyJoined) {
       const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap
@@ -139,7 +160,7 @@ export default function RoomSelectionDialog() {
         </Alert>
       </Snackbar>
       <Backdrop>
-        <Wrapper>
+        <Wrapper className='shadow-md border'>
           {showCreateRoomForm ? (
             <CustomRoomWrapper>
               <TitleWrapper>
@@ -178,13 +199,23 @@ export default function RoomSelectionDialog() {
               </Button>
             </CustomRoomWrapper>
           ) : (
-            <>
-              <Title>Welcome to Land-Bidding</Title>
+            <div className='w-[1000px]'>
+              <Title>Welcome to Land-Bidding Meeting</Title>
               <Content>
                 <p className='px-20 text-red-500 text-center'><b>NOTE:</b> To provide you with a better experience, Land Bidding would like to access your microphone and Camera.</p>
                 <Button variant="contained" color="secondary" onClick={handleConnect}>
-                  
+
                 </Button>
+                {/* <div className='flex gap-4 my-8 text-center text-white'>
+                  <div className=''>
+                    <img src="\src\images\asset\oneToOne.png" alt=""  className=''/>
+                    <p className='mt-2'>One to One Private Room</p>
+                  </div>
+                  <div>
+                    <img src="\src\images\asset\conference.png" alt="" />
+                    <p className='mt-2'>Conference Room</p>
+                  </div>
+                </div> */}
                 <Button
                   variant="outlined"
                   color="secondary"
@@ -193,7 +224,7 @@ export default function RoomSelectionDialog() {
                   Create/find custom rooms
                 </Button>
               </Content>
-            </>
+            </div>
           )}
         </Wrapper>
         {!lobbyJoined && (
