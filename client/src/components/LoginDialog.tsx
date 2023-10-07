@@ -151,13 +151,10 @@ export default function LoginDialog() {
   const roomDescription = useAppSelector((state) => state.room.roomDescription)
   const game = phaserGame.scene.keys.game as Game
   const [LoginUserData, setLoginUserData] = useState({});
-  const[UserName,setUserName] = useState();
+  const [full_name, setfull_name] = useState();
 
   // Include the properties you want to update
-  const dataToUpdate = {
-    roomID: roomID,
-    roomCreated: true
-  };
+
 
   const currentURL = window.location.href;
   var parts = currentURL.split('/');
@@ -167,30 +164,34 @@ export default function LoginDialog() {
   const methods = parts[parts.length - 2];
 
   useEffect(() => {
+
+    const dataToUpdate = {
+      roomID: roomID,
+      roomCreated: true
+    };
+
+    console.log(roomID)
     async function fetchData() {
       try {
         const response = await fetch(`http://localhost:8000/getall/get-data-by-aadhar/${UserID}`);
         const data = await response.json();
         console.log(data)
-        UpdateData(data?.user?.aadhar)
+        UpdateData(data?.user?.aadhaar_number, data?.auctions)
         setLoginUserData(data?.auctions);
-        setUserName(data?.user?.userName)
+        setfull_name(data?.user?.full_name)
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     }
 
-    if (UserID) {
-      fetchData();
-    }
 
-    async function UpdateData(aadhar: any) {
-
+    async function UpdateData(aadhar: any, _auctions: any) {
       if (UserID == aadhar) {
         // Assuming LoginUserData is an array of auctions
         console.log(LoginUserData)
-        if (Array.isArray(LoginUserData)) {
-          LoginUserData.forEach((auction: { propertyID: string; _id: any }) => {
+        if (Array.isArray(_auctions)) {
+          _auctions.forEach((auction: { propertyID: string; _id: any }) => {
+            console.log(auction.propertyID)
             if (auction.propertyID == landID) {
               // Make an HTTP PUT request to update the data
               fetch(`http://localhost:8000/auction/${auction._id}`, {
@@ -221,8 +222,12 @@ export default function LoginDialog() {
 
     }
 
-  }, [UserID]);
+    if (UserID) {
+      fetchData();
+    }
 
+
+  }, [UserID,roomID]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -245,7 +250,7 @@ export default function LoginDialog() {
         <Title>Joining</Title>
         <RoomName>
           <Avatar style={{ background: getColorByString(roomName) }}>
-            {getAvatarString(roomName.slice(0,1))}
+            {getAvatarString(roomName.slice(0, 1))}
           </Avatar>
           <h3>{roomName} ({roomID})</h3>
         </RoomName>
@@ -281,7 +286,7 @@ export default function LoginDialog() {
               label=""
               variant="outlined"
               color="secondary"
-              value={UserName}
+              value={full_name}
               error={nameFieldEmpty}
               helperText={nameFieldEmpty && 'Name is required'}
               onInput={(e) => {
@@ -297,7 +302,7 @@ export default function LoginDialog() {
                 <Button
                   variant="outlined"
                   color="secondary"
-                  
+
                   onClick={() => {
                     game.network.webRTC?.getUserMedia()
                   }}

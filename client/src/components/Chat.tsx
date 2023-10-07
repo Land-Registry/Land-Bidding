@@ -10,10 +10,9 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
 import CloseIcon from '@mui/icons-material/Close'
 import 'emoji-mart/css/emoji-mart.css'
 import { Picker } from 'emoji-mart'
-
+import axios from 'axios';
 import phaserGame from '../PhaserGame'
 import Game from '../scenes/Game'
-
 import { getColorByString } from '../util'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { MessageType, setFocused, setShowChat } from '../stores/ChatStore'
@@ -157,30 +156,32 @@ const Message = ({ chatMessage, messageType }) => {
 export default function Chat() {
   const [inputValue, setInputValue] = useState('')
   const [HighestBID, setHighestBID] = useState('')
+  const [HighestBIDname, setHighestBIDname] = useState('')
+  const [HighestBIDaadhar, setHighestBIDaadhar] = useState('')
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const [readyToSubmit, setReadyToSubmit] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const roomID_ = useAppSelector((state) => state.room.roomId)
   const chatMessages = useAppSelector((state) => state.chat.chatMessages)
   const focused = useAppSelector((state) => state.chat.focused)
   const showChat = useAppSelector((state) => state.chat.showChat)
   const dispatch = useAppDispatch()
   const game = phaserGame.scene.keys.game as Game
 
-  
+
   const currentURL = window.location.href;
   var parts = currentURL.split('/');
   parts = parts[3].split('#');
-  console.log(parts);
   const UserID = parts[parts.length - 4];
   const landID = parts[parts.length - 3];
   const methods = parts[parts.length - 2];
   const roomID = parts[parts.length - 1];
   var texttype: string | undefined;
-  if(roomID =='room'){
+  if (roomID == 'room') {
     texttype = 'text';
   }
-  else{
+  else {
     texttype = 'number';
   }
 
@@ -196,7 +197,36 @@ export default function Chat() {
     }
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const getHighestBid = async () => {
+    try {
+      const response = await fetch(`http://localhost:8000/chats/highestBid?propertyID=${landID}`);
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data)
+        setHighestBID(data.highestBid);
+        setHighestBIDname(data.Name);
+        setHighestBIDaadhar(data.aadhaar_number)
+      } else {
+        console.error('Error fetching highest bid:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+  
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      getHighestBid();
+    }, 1000); // Call getHighestBid every 1 second
+  
+    return () => {
+      clearInterval(intervalId); // Clear the interval when the component unmounts
+    };
+  }, []);
+  
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     // this is added because without this, 2 things happen at the same
@@ -209,12 +239,33 @@ export default function Chat() {
     }
     // move focus back to the game
     inputRef.current?.blur()
-
     const val = inputValue.trim()
-    
-    if (inputValue> HighestBID){
-        if (roomID !='room'){
-        setHighestBID(inputValue)
+
+    if (inputValue > HighestBID) {
+        if (roomID != 'room') {
+          setHighestBID(formatNumberWithCommas(inputValue))
+        try {
+          const response = await fetch('http://localhost:8000/chats', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              aadhaar_number:UserID,
+              message: val,
+              highestBid: inputValue,
+              propertyID:landID
+            }),
+          });
+
+          if (response.ok) {
+            console.log('Chat message saved successfully');
+          } else {
+            console.error('Error saving chat message:', response.statusText);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
       }
       if (val) {
         game.network.addChatMessage(val)
@@ -222,7 +273,7 @@ export default function Chat() {
       }
       setInputValue('')
     }
-    
+
   }
 
   const scrollToBottom = () => {
@@ -239,13 +290,59 @@ export default function Chat() {
     scrollToBottom()
   }, [chatMessages, showChat])
 
+  function formatNumberWithCommas(number) {
+    return number.toLocaleString('en-IN');
+  }
+  
+  
+
+  function closeBidding() {
+    const dataToUpdateAuction = {
+      roomID: roomID_,
+      Buyer_name:HighestBIDname,
+      Buyer_adhar:HighestBIDaadhar,
+      roomCreated: true,
+      status: 'past',
+      finalPrice: HighestBID
+    };
+  
+    const dataToUpdateSellingLand = {
+      propertyID:landID,
+      Buyer_name:HighestBIDname,
+      Buyer_adhar:HighestBIDaadhar,
+      ProcessStatus:2,
+      Price:HighestBID,
+      request:true
+    };
+
+    axios.post(`http://localhost:8000/auction/${UserID}/${landID}`, dataToUpdateAuction)
+  .then((response) => {
+    console.log('Auction saved successfully:', response.data.message);
+    // Handle success here
+    axios.post(`http://localhost:8000/SellingLand/update/${UserID}/${landID}`, dataToUpdateSellingLand)
+    .then((response) => {
+      console.log('Land saved successfully:', response.data.message);
+      // Handle success here
+      dispatch(setShowChat(false))
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      // Handle errors here
+    });
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+    // Handle errors here
+  });
+
+  }
+
   return (
     <Backdrop>
       <Wrapper>
         {showChat ? (
           <>
             <ChatHeader>
-              <h3 className='text-black'>Virtual Dashboard</h3>
               <IconButton
                 aria-label="close dialog"
                 className="close"
@@ -257,7 +354,12 @@ export default function Chat() {
             </ChatHeader>
             <div className='text-center p-2 bg-white'>
               <h3>Highest Bidding Price</h3>
-              <h1 className='text-4xl mt-2'> {HighestBID}</h1>      
+              <h1 className='text-4xl mt-2'> {formatNumberWithCommas(HighestBID)} INR</h1> 
+              {roomID == 'room'?
+              <button onClick={()=>closeBidding()} className='px-2 py-1 bg-red-500 m-2 rounded-md shadow-lg'>Close Bidding</button>
+              :
+              null
+              }
             </div>
             <ChatBox>
               {chatMessages.map(({ messageType, chatMessage }, index) => (
