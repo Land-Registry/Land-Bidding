@@ -286,7 +286,7 @@ export default function LoginDialog() {
               label=""
               variant="outlined"
               color="secondary"
-              value={full_name}
+              value={UserID}
               error={nameFieldEmpty}
               helperText={nameFieldEmpty && 'Name is required'}
               onInput={(e) => {

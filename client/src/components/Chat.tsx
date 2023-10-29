@@ -180,7 +180,7 @@ export default function Chat() {
   var texttype: string | undefined;
   if (roomID == 'room') {
     texttype = 'text';
-  }
+  } 
   else {
     texttype = 'number';
   }
@@ -355,6 +355,7 @@ export default function Chat() {
             <div className='text-center p-2 bg-white'>
               <h3>Highest Bidding Price</h3>
               <h1 className='text-4xl mt-2'> {formatNumberWithCommas(HighestBID)} INR</h1> 
+              <a href={`http://localhost:3000/${UserID}/land/${landID}`} className='px-2 py-1 bg-blue-500 m-2 mt-4 rounded-md shadow-lg'>Dashboard</a>
               {roomID == 'room'?
               <button onClick={()=>closeBidding()} className='px-2 py-1 bg-red-500 m-2 rounded-md shadow-lg'>Close Bidding</button>
               :

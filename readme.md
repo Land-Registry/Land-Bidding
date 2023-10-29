@@ -1,4 +1,4 @@
-# SkyOffice ![License](https://img.shields.io/badge/license-MIT-blue) ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)
+# landbidding ![License](https://img.shields.io/badge/license-MIT-blue) ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)
 
 <img alt="Logo" align="right" src="https://user-images.githubusercontent.com/11501902/139942585-a6b044ce-3695-460a-91bd-dd9f1d4611c8.png" width="20%" />
 
@@ -6,10 +6,10 @@ An immersive virtual office - Winner of [2021 Monte Jade Innovation Competition]
 v
 - Come try it out - [Official Website](https://sky-office.co/)
 - Why we built this - [Concept Video](https://www.youtube.com/watch?v=BpDqGTPh8pc)
-- 🙌 Get latest updates? Follow our [Twitter](https://twitter.com/SkyOfficeApp).
-- 💕 Love this project? Consider [buy me a coffee](https://www.buymeacoffee.com/skyoffice).
+- 🙌 Get latest updates? Follow our [Twitter](https://twitter.com/landbiddingApp).
+- 💕 Love this project? Consider [buy me a coffee](https://www.buymeacoffee.com/landbidding).
 
-SkyOffice works on all PC browsers (mobile browsers are currently not supported)
+landbidding works on all PC browsers (mobile browsers are currently not supported)
 
 ## Built with
 
@@ -69,26 +69,26 @@ You'll need [Node.js](https://nodejs.org/en/), [npm](https://www.npmjs.com/) ins
 Clone this repository to your local machine:
 
 ```bash
-git clone https://github.com/kevinshen56714/SkyOffice.git
+git clone https://github.com/kevinshen56714/landbidding.git
 ```
 
-This will create a folder named `SkyOffice`. You can specify a different folder name like this:
+This will create a folder named `landbidding`. You can specify a different folder name like this:
 
 ```bash
-git clone https://github.com/kevinshen56714/SkyOffice.git my-folder-name
+git clone https://github.com/kevinshen56714/landbidding.git my-folder-name
 ```
 
 To start a server, go into the project folder and install dependencies/run start command:
 
 ```bash
-cd SkyOffice or 'my-folder-name'
+cd landbidding or 'my-folder-name'
 yarn && yarn start
 ```
 
 To start a client, go into the client folder and install dependencies/run start command:
 
 ```bash
-cd SkyOffice/client or 'my-folder-name/client'
+cd landbidding/client or 'my-folder-name/client'
 yarn && yarn dev
 ```
 
@@ -104,4 +104,4 @@ Big thanks to open-source whiteboard project - [WBO](https://github.com/lovasoa/
 
 This project is licensed under MIT.
 
-If you're using SkyOffice to power your virtual office or using our code in other projects, please consider [buy me a coffee](https://www.buymeacoffee.com/skyoffice). Thank you :)
+If you're using landbidding to power your virtual office or using our code in other projects, please consider [buy me a coffee](https://www.buymeacoffee.com/landbidding). Thank you :)
